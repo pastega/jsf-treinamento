@@ -1,0 +1,62 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    template="/WEB-INF/templates/template.xhtml">
+    <ui:define name="title">Agendamento de consultas</ui:define>
+    <ui:define name="content">
+        <h:form>
+            <p:panel header="Agendar consulta" style="max-width: 600px;">
+                <ui:include src="/modal/confirmarModal.xhtml" >
+                    <ui:param name="modalBean" value="#{agendamentoBean}"/>
+                </ui:include>
+                <p:panelGrid columns="2" columnClasses="label,value">
+                    <p:outputLabel for="cpf" value="CPF do paciente: " styleClass="label" />
+
+                    <h:panelGroup style="display: flex; gap:1em;">
+                        <p:inputMask
+                                id="cpf"
+                                value="${agendamentoBean.cadastroConsulta.cpfPaciente}"
+                                mask="999.999.999-99"
+                            />
+                        <p:commandButton
+                                value="Buscar"
+                                update="@form"
+                                icon="pi pi-search"
+                                action="#{agendamentoBean.buscarPaciente}"
+                            />
+                    </h:panelGroup>
+
+                    <p:outputLabel for="nome" value="Nome do paciente" styleClass="label" />
+
+                    <p:inputText id="nome" value="#{agendamentoBean.cadastroConsulta.nomePaciente}"/>
+
+                    <p:outputLabel for="dataHoraConsulta" value="Data e hora da consulta"/>
+                    <p:datePicker
+                            id="dataHoraConsulta"
+                            showTime="true"
+                            pattern="dd/MM/yyyy HH:mm"
+                            locale="pt_BR"
+                            mindate="#{agendamentoBean.hoje}"
+                        />
+
+                </p:panelGrid>
+
+                <p:separator />
+
+                <p:commandButton value="Limpar"
+                                 update="@form"
+                                 icon="pi pi-refresh"
+                                 styleClass="ui-button-secondary"/>
+
+                <p:commandButton value="Agendar"
+                                 action="#{agendamentoBean.salvar}"
+                                 icon="pi pi-save"
+                                 update="@form" />
+
+            </p:panel>
+        </h:form>
+    </ui:define>
+</ui:composition>
