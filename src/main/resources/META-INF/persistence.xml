@@ -9,6 +9,7 @@
 
         <!-- Insira suas classes de entidade aqui -->
         <class>br.com.tcs.treinamento.entity.Pessoa</class>
+        <class>br.com.tcs.treinamento.entity.Consulta</class>
 
         <properties>
             <!-- Dados de conexão com o H2 -->

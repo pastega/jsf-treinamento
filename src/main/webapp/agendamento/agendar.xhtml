@@ -18,7 +18,7 @@
                     <h:panelGroup style="display: flex; gap:1em;">
                         <p:inputMask
                                 id="cpf"
-                                value="${agendamentoBean.cadastroConsulta.cpfPaciente}"
+                                value="${agendamentoBean.consultaVO.cpfPaciente}"
                                 mask="999.999.999-99"
                             />
                         <p:commandButton
@@ -31,7 +31,7 @@
 
                     <p:outputLabel for="nome" value="Nome do paciente" styleClass="label" />
 
-                    <p:inputText id="nome" value="#{agendamentoBean.cadastroConsulta.nomePaciente}"/>
+                    <p:inputText id="nome" value="#{agendamentoBean.consultaVO.nomePaciente}"/>
 
                     <p:outputLabel for="dataHoraConsulta" value="Data e hora da consulta"/>
                     <p:datePicker
@@ -58,5 +58,27 @@
 
             </p:panel>
         </h:form>
+
+        <!-- Diálogo de erro -->
+        <p:dialog widgetVar="errorDialog" header="Campos não preenchidos"
+                  modal="true" closable="false" resizable="false">
+            <h:outputText value="#{agendamentoBean.errorMessage}" escape="false" />
+            <f:facet name="footer">
+                <p:commandButton value="Fechar"
+                                 onclick="PF('errorDialog').hide();"
+                                 type="button" />
+            </f:facet>
+        </p:dialog>
+
+        <!-- Diaglogo de sucesso-->
+        <p:dialog widgetVar="successDialog" header="Sucesso"
+                  modal="true" closable="false" resizable="false">
+            <h:outputText value="Agendamento realizado com sucesso!" />
+            <f:facet name="footer">
+                <p:commandButton value="Ok"
+                                 onclick="PF('successDialog').hide();"
+                                 type="button" />
+            </f:facet>
+        </p:dialog>
     </ui:define>
 </ui:composition>
