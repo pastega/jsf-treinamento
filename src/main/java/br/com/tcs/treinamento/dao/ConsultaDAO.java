@@ -33,6 +33,20 @@ public class ConsultaDAO {
         }
     }
 
+    public Consulta atualizar(Consulta consulta) {
+        try {
+            em.getTransaction().begin();
+            Consulta c = em.merge(consulta);
+            em.getTransaction().commit();
+            return c;
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw e;
+        }
+    }
+
     public List<Consulta> listar() {
         return em.createQuery("SELECT c FROM Consulta c", Consulta.class).getResultList();
     }

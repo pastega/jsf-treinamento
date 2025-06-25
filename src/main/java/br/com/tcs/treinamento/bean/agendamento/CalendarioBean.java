@@ -4,6 +4,7 @@ import br.com.tcs.treinamento.entity.Consulta;
 import br.com.tcs.treinamento.model.ConsultaVO;
 import br.com.tcs.treinamento.service.ConsultaService;
 import br.com.tcs.treinamento.service.impl.ConsultaServiceImpl;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.DefaultScheduleModel;
@@ -15,6 +16,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -23,8 +25,10 @@ import java.util.Map;
 public class CalendarioBean implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private ConsultaVO selectedConsulta;
+    private Consulta selectedConsulta;
     private ScheduleModel model;
+
+    private String errorMessage;
 
     private transient ConsultaService consultaService = new ConsultaServiceImpl();
 
@@ -51,6 +55,19 @@ public class CalendarioBean implements Serializable {
                 .getExternalContext()
                 .getRequestParameterMap();
 
+        String consultaIdParam = params.get("consultaId");
+
+        if (consultaIdParam != null && !consultaIdParam.trim().isEmpty()) {
+            try {
+                selectedConsulta = consultaService.buscarPorId(Long.parseLong(consultaIdParam));
+            } catch (NumberFormatException e) {
+                errorMessage = "ID inválido";
+            }
+        }
+
+        if (selectedConsulta == null) {
+            errorMessage = "Consulta inválida";
+        }
     }
 
     public void onEventSelect(SelectEvent<ScheduleEvent> selectEvent) {
@@ -58,28 +75,20 @@ public class CalendarioBean implements Serializable {
         Long consultaId = (Long) event.getData();
 
         // Buscar no banco de dados a consulta inteira e cirar um VO a partir dela
-        Consulta consulta = consultaService.buscarPorId(consultaId);
-
-        System.out.println(consulta);
-
-        ConsultaVO consultaVO = new ConsultaVO();
-        consultaVO.setNomePaciente(consulta.getPaciente().getNome());
-        consultaVO.setCpfPaciente(consulta.getPaciente().getNumeroCPF());
-        consultaVO.setDataHoraConsulta(consulta.getDataHora());
-
-        selectedConsulta = consultaVO;
+        selectedConsulta = consultaService.buscarPorId(consultaId);
     }
 
     public String prepararEdicao() {
-        return "alterar";
+        System.out.println("Redirecionando para edição");
+        return "alterar?faces-redirect=true&consultaId=" + selectedConsulta.getId() ;
     }
 
     // <editor-fold desc="Getters and Setters">
-    public ConsultaVO getSelectedConsulta() {
+    public Consulta getSelectedConsulta() {
         return selectedConsulta;
     }
 
-    public void setSelectedConsulta(ConsultaVO selectedConsulta) {
+    public void setSelectedConsulta(Consulta selectedConsulta) {
         this.selectedConsulta = selectedConsulta;
     }
 
@@ -99,5 +108,23 @@ public class CalendarioBean implements Serializable {
         this.consultaService = consultaService;
     }
 
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
     // </editor-fold>
+    public LocalDate getHoje() {
+        return LocalDate.now();
+    }
+
+    public String atualizar() {
+        consultaService.atualizar(selectedConsulta);
+        PrimeFaces.current().executeScript("PF('successDialog').show();");
+
+        return "calendario?faces-redirect=true";
+    }
 }

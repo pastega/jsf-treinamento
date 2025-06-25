@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface ConsultaService {
     void cadastrar(Consulta consulta);
+    void atualizar(Consulta consulta);
     Consulta buscarPorId(Long id);
     List<Consulta> listar();
 }

@@ -7,8 +7,9 @@
         template="/WEB-INF/templates/template.xhtml">
     <ui:define name="title">Agendamento de consultas</ui:define>
     <ui:define name="content">
+        <p:growl id="messages" showDetail="true" life="5000" />
         <h:form>
-            <p:panel header="Agendar consulta" style="max-width: 600px;">
+            <p:panel header="Editar agendamento da consulta" style="max-width: 600px;">
                 <ui:include src="/modal/confirmarModal.xhtml" >
                     <ui:param name="modalBean" value="#{calendarioBean.selectedConsulta}"/>
                 </ui:include>
@@ -18,7 +19,7 @@
                     <h:panelGroup style="display: flex; gap:1em;">
                         <p:inputMask
                                 id="cpf"
-                                value="${calendarioBean.selectedConsulta.cpfPaciente}"
+                                value="#{calendarioBean.selectedConsulta.paciente.numeroCPF}"
                                 mask="999.999.999-99"
                         />
                         <p:commandButton
@@ -31,7 +32,7 @@
 
                     <p:outputLabel for="nome" value="Nome do paciente" styleClass="label" />
 
-                    <p:inputText id="nome" value="#{calendarioBean.selectedConsulta.nomePaciente}"/>
+                    <p:inputText id="nome" value="#{calendarioBean.selectedConsulta.paciente.nome}"/>
 
                     <p:outputLabel for="dataHoraConsulta" value="Data e hora da consulta"/>
                     <p:datePicker
@@ -39,8 +40,8 @@
                             showTime="true"
                             pattern="dd/MM/yyyy HH:mm"
                             locale="pt_BR"
-                            mindate="#{calendarioBean.selectedConsulta.hoje}"
-                            value="#{calendarioBean.selectedConsulta.dataHoraConsulta}"
+                            mindate="#{calendarioBean.hoje}"
+                            value="#{calendarioBean.selectedConsulta.dataHora}"
                     />
 
                 </p:panelGrid>
@@ -53,7 +54,7 @@
                                  styleClass="ui-button-secondary"/>
 
                 <p:commandButton value="Agendar"
-                                 action="#{calendarioBean.selectedConsulta.salvar}"
+                                 action="#{calendarioBean.atualizar}"
                                  icon="pi pi-save"
                                  update="@form" />
 
@@ -63,7 +64,7 @@
         <!-- Diálogo de erro -->
         <p:dialog id="errorDialog" widgetVar="errorDialog" header="Campos não preenchidos"
                   modal="true" closable="false" resizable="false">
-            <h:outputText value="#{calendarioBean.selectedConsulta.errorMessage}" escape="false" />
+            <h:outputText value="#{calendarioBean.errorMessage}" escape="false" />
             <f:facet name="footer">
                 <p:commandButton value="Fechar"
                                  onclick="PF('errorDialog').hide();"
@@ -74,7 +75,7 @@
         <!-- Diaglogo de sucesso-->
         <p:dialog widgetVar="successDialog" header="Sucesso"
                   modal="true" closable="false" resizable="false">
-            <h:outputText value="Agendamento realizado com sucesso!" />
+            <h:outputText value="Agendamento autualizado com sucesso" />
             <f:facet name="footer">
                 <p:commandButton value="Ok"
                                  onclick="PF('successDialog').hide();"

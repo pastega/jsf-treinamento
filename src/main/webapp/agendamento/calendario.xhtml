@@ -31,13 +31,13 @@
 
                 <p:panelGrid id="detalhesConsulta" columns="2" columnClasses="label,value">
                     <h:outputText value="Paciente:" />
-                    <h:outputText value="#{calendarioBean.selectedConsulta.nomePaciente}" style="font-weight: bold;"/>
+                    <h:outputText value="#{calendarioBean.selectedConsulta.paciente.nome}" style="font-weight: bold;"/>
 
                     <h:outputText value="CPF:" />
-                    <h:outputText value="#{calendarioBean.selectedConsulta.cpfPaciente}" />
+                    <h:outputText value="#{calendarioBean.selectedConsulta.paciente.numeroCPF}" />
 
                     <h:outputText value="Data e Hora:" />
-                    <h:outputText value="#{calendarioBean.selectedConsulta.dataHoraConsulta}">
+                    <h:outputText value="#{calendarioBean.selectedConsulta.dataHora}">
                         <f:convertDateTime type="localDateTime" pattern="dd/MM/yyyy 'às' HH:mm" locale="pt_BR" />
                     </h:outputText>
                 </p:panelGrid>
@@ -45,12 +45,12 @@
                 <f:facet name="footer">
                     <p:commandButton value="Remover"
                                      styleClass="ui-button-danger"
-                                     type="button"
                                      icon="pi pi-times" />
                     <p:commandButton value="Editar"
                                      styleClass="ui-button-secondary"
-                                     type="button"
-                                     icon="pi pi-pencil"/>
+                                     icon="pi pi-pencil"
+                                     action="#{calendarioBean.prepararEdicao()}"
+                    />
                     <p:commandButton value="Fechar"
                                      type="button"
                                      icon="pi pi-check"

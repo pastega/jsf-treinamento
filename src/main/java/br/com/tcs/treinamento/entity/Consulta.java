@@ -18,6 +18,9 @@ public class Consulta {
     @Column(nullable = false, unique = true)
     private LocalDateTime dataHora;
 
+    @Column(nullable = false)
+    private Boolean ativo = true;
+
     public Long getId() {
         return id;
     }

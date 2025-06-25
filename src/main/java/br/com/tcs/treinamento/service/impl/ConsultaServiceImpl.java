@@ -16,6 +16,11 @@ public class ConsultaServiceImpl implements ConsultaService {
     }
 
     @Override
+    public void atualizar(Consulta consulta) {
+        consultaDAO.atualizar(consulta);
+    }
+
+    @Override
     public Consulta buscarPorId(Long id) {
         return consultaDAO.buscarPorId(id);
     }
