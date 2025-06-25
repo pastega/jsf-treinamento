@@ -13,8 +13,10 @@ import org.primefaces.model.ScheduleModel;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 @ManagedBean(name = "calendarioBean")
 @ViewScoped
@@ -43,6 +45,12 @@ public class CalendarioBean implements Serializable {
                     .build();
             model.addEvent(event);
         });
+
+        // Buscar por parâmetros de URL
+        Map<String, String> params = FacesContext.getCurrentInstance()
+                .getExternalContext()
+                .getRequestParameterMap();
+
     }
 
     public void onEventSelect(SelectEvent<ScheduleEvent> selectEvent) {
