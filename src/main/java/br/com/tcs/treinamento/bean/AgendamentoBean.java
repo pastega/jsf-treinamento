@@ -24,7 +24,6 @@ public class AgendamentoBean implements Serializable {
     private transient ConsultaService consultaService = new ConsultaServiceImpl();
 
     private ConsultaVO consultaVO;
-    private Pessoa pessoa;
     private String errorMessage;
 
     @PostConstruct
@@ -33,16 +32,23 @@ public class AgendamentoBean implements Serializable {
     }
 
     public void buscarPaciente() {
-        pessoa = pessoaService.buscarPorCpf(consultaVO.getCpfPaciente());
+        Pessoa pessoa = pessoaService.buscarPorCpf(consultaVO.getCpfPaciente());
         if (pessoa == null) {
             consultaVO.setNomePaciente("");
             return;
         }
+        System.out.println("Selecionando pessoa: " + pessoa);
         consultaVO.setNomePaciente(pessoa.getNome());
     }
 
     public void salvar() {
         // Fazer validações
+        // Recuperar pessoa de novo:
+        Pessoa pessoa = pessoaService.buscarPorCpf(consultaVO.getCpfPaciente());
+
+        System.out.println("Tentando agendar: " + consultaVO);
+        System.out.println("Pessoa seelcionada: " + pessoa);
+
         if (pessoa == null) return;
         if (consultaVO.getCpfPaciente().isEmpty()) return;
         if (consultaVO.getNomePaciente().isEmpty()) return;
@@ -50,7 +56,7 @@ public class AgendamentoBean implements Serializable {
 
         System.out.println("Validações concluídas");
 
-        Consulta c = mapVOEntity();
+        Consulta c = mapVOEntity(pessoa);
         try {
             consultaService.cadastrar(c);
 
@@ -88,9 +94,10 @@ public class AgendamentoBean implements Serializable {
 
     // </editor-fold>
 
-    private Consulta mapVOEntity() {
+    private Consulta mapVOEntity(Pessoa p) {
         Consulta c = new Consulta();
-
+        c.setPaciente(p);
+        c.setDataHora(consultaVO.getDataHoraConsulta());
         return c;
     }
 }

@@ -34,4 +34,13 @@ public class ConsultaVO implements Serializable {
     public void setDataHoraConsulta(LocalDateTime dataHoraConsulta) {
         this.dataHoraConsulta = dataHoraConsulta;
     }
+
+    @Override
+    public String toString() {
+        return "ConsultaVO{" +
+                "cpfPaciente='" + cpfPaciente + '\'' +
+                ", nomePaciente='" + nomePaciente + '\'' +
+                ", dataHoraConsulta=" + dataHoraConsulta +
+                '}';
+    }
 }
