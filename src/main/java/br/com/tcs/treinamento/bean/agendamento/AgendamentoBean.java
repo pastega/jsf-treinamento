@@ -1,4 +1,4 @@
-package br.com.tcs.treinamento.bean;
+package br.com.tcs.treinamento.bean.agendamento;
 
 import br.com.tcs.treinamento.entity.Consulta;
 import br.com.tcs.treinamento.entity.Pessoa;
@@ -14,6 +14,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @ManagedBean(name = "agendamentoBean")
 @ViewScoped
@@ -42,34 +44,57 @@ public class AgendamentoBean implements Serializable {
     }
 
     public void salvar() {
-        // Fazer validações
-        // Recuperar pessoa de novo:
-        Pessoa pessoa = pessoaService.buscarPorCpf(consultaVO.getCpfPaciente());
+        List<String> erros = new ArrayList<>();
+        Pessoa pessoa = null;
 
-        System.out.println("Tentando agendar: " + consultaVO);
-        System.out.println("Pessoa seelcionada: " + pessoa);
+        // 1. First, attempt to find the patient and handle NoResultException
+        try {
+            pessoa = pessoaService.buscarPorCpf(consultaVO.getCpfPaciente());
+        } catch (Exception e) {
+            // Patient not found in DB
+            pessoa = null; // Explicitly set to null if NoResultException occurs
+            System.err.println("Paciente não encontrado pelo CPF: " + consultaVO.getCpfPaciente());
+            erros.add("Paciente não encontrado no banco de dados.");
+        }
 
-        if (pessoa == null) return;
-        if (consultaVO.getCpfPaciente().isEmpty()) return;
-        if (consultaVO.getNomePaciente().isEmpty()) return;
-        if (consultaVO.getDataHoraConsulta() == null) return;
+        // 2. Perform other validations
+        if (pessoa == null) { // This check now also catches the NoResultException case
+            // If errors were not added in the try-catch, add them here
+            if (!erros.contains("Paciente não encontrado no banco de dados.")) {
+                erros.add("Paciente não encontrado no banco de dados.");
+            }
+        }
+        if (consultaVO.getDataHoraConsulta() == null) {
+            erros.add("Data e hora da consulta são inválidas.");
+        }
 
-        System.out.println("Validações concluídas");
+        // 3. If any validation errors exist, show the error dialog and stop.
+        if (!erros.isEmpty()) {
+            errorMessage = String.join("<br/>", erros);
+            System.out.println("Validation Errors: " + errorMessage); // For debugging
+            PrimeFaces.current().ajax().update("errorDialog");
+            PrimeFaces.current().executeScript("PF('errorDialog').show();");
+            return; // STOP here if there are validation errors
+        }
 
+        // 4. If validations pass, proceed with saving the consultation.
         Consulta c = mapVOEntity(pessoa);
         try {
             consultaService.cadastrar(c);
-
             PrimeFaces.current().executeScript("PF('successDialog').show();");
+            // Reiniciar o formulário only on success
+            init();
         } catch(Exception e) {
-            System.out.println(e.getMessage());
+            // If an exception occurs during cadastrar (e.g., database error)
+            System.err.println("Erro ao agendar consulta: " + e.getMessage());
+            errorMessage = "Erro ao agendar consulta: " + e.getMessage(); // Provide specific error if desired
+            PrimeFaces.current().ajax().update("errorDialog");
             PrimeFaces.current().executeScript("PF('errorDialog').show();");
         }
 
-        // Reiniciar o formulário
-        init();
+        // Remove this line unless 'confirmDialog' has a very specific, different purpose
+        // PrimeFaces.current().executeScript("PF('confirmDialog').show();");
     }
-
 
     public LocalDate getHoje() {
         return LocalDate.now();

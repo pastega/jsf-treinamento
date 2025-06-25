@@ -1,6 +1,8 @@
 package br.com.tcs.treinamento.dao;
 
 import br.com.tcs.treinamento.entity.Pessoa;
+
+import java.sql.SQLOutput;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -87,7 +89,8 @@ public class PessoaDAO {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
-            throw e;
+            System.out.println(e.getMessage());
+            return null;
         }
     }
 }

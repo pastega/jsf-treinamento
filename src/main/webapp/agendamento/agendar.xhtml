@@ -61,7 +61,7 @@
         </h:form>
 
         <!-- Diálogo de erro -->
-        <p:dialog widgetVar="errorDialog" header="Campos não preenchidos"
+        <p:dialog id="errorDialog" widgetVar="errorDialog" header="Campos não preenchidos"
                   modal="true" closable="false" resizable="false">
             <h:outputText value="#{agendamentoBean.errorMessage}" escape="false" />
             <f:facet name="footer">

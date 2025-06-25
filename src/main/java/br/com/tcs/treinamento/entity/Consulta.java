@@ -15,7 +15,7 @@ public class Consulta {
     @JoinColumn(name = "paciente_id", nullable = false)
     private Pessoa paciente;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private LocalDateTime dataHora;
 
     public Long getId() {
@@ -40,5 +40,14 @@ public class Consulta {
 
     public void setDataHora(LocalDateTime dataHora) {
         this.dataHora = dataHora;
+    }
+
+    @Override
+    public String toString() {
+        return "Consulta{" +
+                "id=" + id +
+                ", paciente=" + paciente +
+                ", dataHora=" + dataHora +
+                '}';
     }
 }

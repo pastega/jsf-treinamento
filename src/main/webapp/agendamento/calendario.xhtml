@@ -37,13 +37,24 @@
                     <h:outputText value="#{calendarioBean.selectedConsulta.cpfPaciente}" />
 
                     <h:outputText value="Data e Hora:" />
-                    <h:outputText value="#{calendarioBean.selectedConsulta.dataHora}">
-                        <f:convertDateTime pattern="dd/MM/yyyy 'às' HH:mm" locale="pt_BR" />
+                    <h:outputText value="#{calendarioBean.selectedConsulta.dataHoraConsulta}">
+                        <f:convertDateTime type="localDateTime" pattern="dd/MM/yyyy 'às' HH:mm" locale="pt_BR" />
                     </h:outputText>
                 </p:panelGrid>
 
                 <f:facet name="footer">
-                    <p:commandButton value="Fechar" type="button" onclick="PF('dialogConsulta').hide()" />
+                    <p:commandButton value="Remover"
+                                     styleClass="ui-button-danger"
+                                     type="button"
+                                     icon="pi pi-times" />
+                    <p:commandButton value="Editar"
+                                     styleClass="ui-button-secondary"
+                                     type="button"
+                                     icon="pi pi-pencil"/>
+                    <p:commandButton value="Fechar"
+                                     type="button"
+                                     icon="pi pi-check"
+                                     onclick="PF('dialogConsulta').hide()" />
                 </f:facet>
             </p:dialog>
         </h:form>

@@ -1,4 +1,4 @@
-package br.com.tcs.treinamento.bean;
+package br.com.tcs.treinamento.bean.cadastro;
 
 import br.com.tcs.treinamento.entity.Pessoa;
 import br.com.tcs.treinamento.service.PessoaService;

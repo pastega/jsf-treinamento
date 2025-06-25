@@ -37,4 +37,8 @@ public class ConsultaDAO {
         return em.createQuery("SELECT c FROM Consulta c", Consulta.class).getResultList();
     }
 
+    public Consulta buscarPorId(Long id) {
+        return em.find(Consulta.class, id);
+    }
+
 }
