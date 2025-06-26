@@ -9,15 +9,54 @@
     </ui:define>
 
     <ui:define name="content">
-        <h:form>
+        <h:form id="form">
             <div style="width:100%; text-align:center; margin-top:100px;">
-                <h:outputText value="Bem-vindo ao treinamento JSF!"
-                              style="font-size:36px; font-weight:bold; display:block; margin-bottom:20px;" />
 
-                <h:outputText value="Use o menu acima para navegar pelas telas e tenha um bom treinamento."
-                              style="font-size:22px;" />
+                <!-- Content wrapper for easy AJAX updates -->
+                <h:panelGroup id="welcomePanel" layout="block">
+                    <h:outputText value="#{welcomeBean.message}"
+                                  style="font-size:36px; font-weight:bold; display:block; margin-bottom:20px;" />
+
+                    <h:outputText value="Use o menu acima para navegar pelas telas e tenha um bom treinamento."
+                                  style="font-size:22px;" />
+                </h:panelGroup>
+
+                <br/>
+
+                <!-- Button to open the editing dialog -->
+                <p:commandButton value="Editar Mensagem"
+                                 icon="pi pi-pencil"
+                                 onclick="PF('dlgEdit').show();"
+                                 style="margin-top:25px;"/>
             </div>
         </h:form>
+
+        <!--  The dialog for editing the message -->
+        <p:dialog header="Editar Mensagem de Boas-Vindas" widgetVar="dlgEdit" modal="true"
+                  showEffect="fade" hideEffect="fade" resizable="false">
+            <h:form id="dialogForm">
+                <p:panelGrid columns="2" styleClass="ui-noborder">
+                    <h:outputLabel for="welcomeMsg" value="Nova Mensagem:" />
+                    <p:inputText id="welcomeMsg" value="#{welcomeBean.message}" required="true" style="width:250px;"/>
+                </p:panelGrid>
+
+                <br/>
+
+                <div style="text-align:center;">
+                    <!-- Button to save changes and close the dialog -->
+                    <p:commandButton value="Salvar"
+                                     icon="pi pi-check"
+                                     update=":form:welcomePanel"
+                                     oncomplete="if (!args.validationFailed) { PF('dlgEdit').hide(); }"/>
+                    <p:commandButton value="Cancelar"
+                                     icon="pi pi-times"
+                                     onclick="PF('dlgEdit').hide();"
+                                     styleClass="ui-button-secondary"
+                                     style="margin-left: 5px;"/>
+                </div>
+            </h:form>
+        </p:dialog>
+
     </ui:define>
 
 </ui:composition>
